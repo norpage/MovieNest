@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieNest</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://thumb.cloud.mail.ru/weblink/thumb/xw1/hPZo/pz7QbpsHP" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <!-- <link rel="manifest" href="site.webmanifest"> -->
+</head>
+
+<body>
+    <div class="container">
+        <div class="search-results">
+            <h2 class="resultName"></h2>
+            <div id="result"></div>
+        </div>
+
+        <div class="main-content">
+            <form id="searchForm">
+                <input type="text" id="searchInput" placeholder="Enter film name or Kinopoisk URL/number" required>
+                <button type="submit">Search</button>
+            </form>
+            <iframe id="filmFrame" allowfullscreen></iframe>
+            <div class="divDow">
+                <p class="name">Select And Enjoy Movies</p>
+                <button class="trailer"></button>
+                <a href="" id="downloadLink" class="download-link">Download</a>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
