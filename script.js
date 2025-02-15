@@ -9,27 +9,6 @@ if ('serviceWorker' in navigator) {
         });
 }
 
-// Show/Hide Loading Spinner
-function showLoading() {
-    document.getElementById("loading").style.display = "block";
-}
-
-function hideLoading() {
-    document.getElementById("loading").style.display = "none";
-}
-
-// Debounced Search
-let timeout;
-document.getElementById("searchInput").addEventListener("input", () => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-        document.getElementById("searchForm").dispatchEvent(new Event("submit"));
-    }, 300);
-});
-
-// Rest of your JavaScript remains the same
-
-
 window.addEventListener('load', async function () {
     const resultDiv = document.getElementById("result");
     const bestMoviesUrl = "https://corsproxy.io/https://kinogo.ec/";
