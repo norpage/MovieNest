@@ -28,14 +28,14 @@ document.getElementById("searchInput").addEventListener("input", () => {
 });
 
 // Fetch Best Movies
-window.addEventListener('load', async function () {
+async function fetchBestMovies() {
     const resultDiv = document.getElementById("result");
-    const bestMoviesUrl = "https://cors-anywhere.herokuapp.com/https://kinogo.ec/";
+    const bestMoviesUrl = "https://api.allorigins.win/raw?url=https://kinogo.ec/";
     const iframe = document.getElementById("filmFrame");
-    const trailerP = document.querySelector('.trailer')
+    const trailerP = document.querySelector('.trailer');
 
     try {
-        showLoading(); // Показываем спиннер загрузки
+        showLoading();
         const res = await fetch(bestMoviesUrl);
         if (!res.ok) throw new Error(`Ошибка запроса: ${res.status}`);
         const html = await res.text();
@@ -74,45 +74,7 @@ window.addEventListener('load', async function () {
                 document.querySelector('.resultName').textContent = "Top Movies";
 
                 card.addEventListener('click', () => {
-                    fetch(`https://cors-anywhere.herokuapp.com/${item.url}`)
-                        .then(response => response.text())
-                        .then(pageHtml => {
-                            const pageDoc = new DOMParser().parseFromString(pageHtml, 'text/html');
-                            const liElement = pageDoc.querySelector('li[data-provider="2"]');
-                            const trailer = pageDoc.querySelector('.video__trailer');
-
-                            if (liElement) {
-                                const iframeSrc = liElement.getAttribute('data-src');
-                                const trail = trailer.getAttribute('data-src');
-
-                                if (iframeSrc) {
-                                    document.querySelector('.name').textContent = item.title;
-                                    iframe.src = iframeSrc;
-                                    trailerP.textContent = "Trailer";
-                                    trailerP.style.display = 'block';
-                                    localStorage.setItem("selectedURL", iframeSrc);
-                                    localStorage.setItem("selectedName", item.title);
-                                    trailerP.addEventListener('click', () => {
-                                        if (trailerP.textContent === "Movie") {
-                                            iframe.src = iframeSrc;
-                                            trailerP.textContent = "Trailer";
-                                        } else {
-                                            iframe.src = trail;
-                                            trailerP.textContent = "Movie";
-                                        }
-                                    });
-                                    fetchTitleAndHLS(iframeSrc);
-                                    localStorage.removeItem("selectedNumber");
-                                } else {
-                                    console.error('data-src attribute not found in <li>');
-                                }
-                            } else {
-                                console.error('Element with data-provider="2" not found');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error fetching details:', error);
-                        });
+                    fetchMovieDetails(item.url, item.title);
                 });
             });
         }
@@ -120,8 +82,55 @@ window.addEventListener('load', async function () {
         resultDiv.innerHTML = "Произошла ошибка при загрузке фильмов.";
         console.error(error);
     } finally {
-        hideLoading(); // Скрываем спиннер загрузки
+        hideLoading();
     }
-});
+}
+
+// Fetch Movie Details
+async function fetchMovieDetails(url, title) {
+    const iframe = document.getElementById("filmFrame");
+    const trailerP = document.querySelector('.trailer');
+
+    try {
+        const res = await fetch(`https://api.allorigins.win/raw?url=${url}`);
+        if (!res.ok) throw new Error(`Ошибка запроса: ${res.status}`);
+        const pageHtml = await res.text();
+        const pageDoc = new DOMParser().parseFromString(pageHtml, 'text/html');
+
+        const liElement = pageDoc.querySelector('li[data-provider="2"]');
+        const trailer = pageDoc.querySelector('.video__trailer');
+
+        if (liElement) {
+            const iframeSrc = liElement.getAttribute('data-src');
+            const trail = trailer.getAttribute('data-src');
+
+            if (iframeSrc) {
+                document.querySelector('.name').textContent = title;
+                iframe.src = iframeSrc;
+                trailerP.textContent = "Trailer";
+                trailerP.style.display = 'block';
+                localStorage.setItem("selectedURL", iframeSrc);
+                localStorage.setItem("selectedName", title);
+                trailerP.addEventListener('click', () => {
+                    if (trailerP.textContent === "Movie") {
+                        iframe.src = iframeSrc;
+                        trailerP.textContent = "Trailer";
+                    } else {
+                        iframe.src = trail;
+                        trailerP.textContent = "Movie";
+                    }
+                });
+                fetchTitleAndHLS(iframeSrc);
+                localStorage.removeItem("selectedNumber");
+            } else {
+                console.error('data-src attribute not found in <li>');
+            }
+        } else {
+            console.error('Element with data-provider="2" not found');
+        }
+    } catch (error) {
+        console.error('Error fetching details:', error);
+    }
+}
 
 // Остальной код остается без изменений...
