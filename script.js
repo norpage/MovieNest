@@ -27,16 +27,17 @@ document.getElementById("searchInput").addEventListener("input", () => {
     }, 300);
 });
 
-// Rest of your JavaScript remains the same
-
+// Fetch Best Movies
 window.addEventListener('load', async function () {
     const resultDiv = document.getElementById("result");
-    const bestMoviesUrl = "https://corsproxy.io/https://kinogo.ec/";
+    const bestMoviesUrl = "https://cors-anywhere.herokuapp.com/https://kinogo.ec/";
     const iframe = document.getElementById("filmFrame");
     const trailerP = document.querySelector('.trailer')
 
     try {
+        showLoading(); // Показываем спиннер загрузки
         const res = await fetch(bestMoviesUrl);
+        if (!res.ok) throw new Error(`Ошибка запроса: ${res.status}`);
         const html = await res.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
@@ -64,20 +65,19 @@ window.addEventListener('load', async function () {
                 const card = document.createElement("div");
                 card.classList.add('movie-card');
                 card.innerHTML = `
-                            <img src="https://kinogo.ec/${item.img}" alt="${item.title}">
-                            <div class="movie-info">
-                                <div class="movie-title">${item.title}</div>
-                                <div class="movie-year">${item.year}</div>
-                            </div>`;
+                    <img src="https://kinogo.ec/${item.img}" alt="${item.title}">
+                    <div class="movie-info">
+                        <div class="movie-title">${item.title}</div>
+                        <div class="movie-year">${item.year}</div>
+                    </div>`;
                 resultDiv.appendChild(card);
-                document.querySelector('.resultName').textContent = "Top Movies"
+                document.querySelector('.resultName').textContent = "Top Movies";
 
                 card.addEventListener('click', () => {
-                    fetch(`https://corsproxy.io/${item.url}`)
+                    fetch(`https://cors-anywhere.herokuapp.com/${item.url}`)
                         .then(response => response.text())
                         .then(pageHtml => {
                             const pageDoc = new DOMParser().parseFromString(pageHtml, 'text/html');
-
                             const liElement = pageDoc.querySelector('li[data-provider="2"]');
                             const trailer = pageDoc.querySelector('.video__trailer');
 
@@ -86,23 +86,23 @@ window.addEventListener('load', async function () {
                                 const trail = trailer.getAttribute('data-src');
 
                                 if (iframeSrc) {
-                                    document.querySelector('.name').textContent = item.title
+                                    document.querySelector('.name').textContent = item.title;
                                     iframe.src = iframeSrc;
-                                    trailerP.textContent = "Trailer"
-                                    trailerP.style.display = 'block'
+                                    trailerP.textContent = "Trailer";
+                                    trailerP.style.display = 'block';
                                     localStorage.setItem("selectedURL", iframeSrc);
                                     localStorage.setItem("selectedName", item.title);
                                     trailerP.addEventListener('click', () => {
                                         if (trailerP.textContent === "Movie") {
                                             iframe.src = iframeSrc;
-                                            trailerP.textContent = "Trailer"
+                                            trailerP.textContent = "Trailer";
                                         } else {
                                             iframe.src = trail;
-                                            trailerP.textContent = "Movie"
+                                            trailerP.textContent = "Movie";
                                         }
-                                    })
-                                    fetchTitleAndHLS(iframeSrc)
-                                    localStorage.removeItem("selectedNumber")
+                                    });
+                                    fetchTitleAndHLS(iframeSrc);
+                                    localStorage.removeItem("selectedNumber");
                                 } else {
                                     console.error('data-src attribute not found in <li>');
                                 }
@@ -117,6 +117,11 @@ window.addEventListener('load', async function () {
             });
         }
     } catch (error) {
-        resultDiv.innerHTML = "An error occurred while fetching the best movies.";
+        resultDiv.innerHTML = "Произошла ошибка при загрузке фильмов.";
+        console.error(error);
+    } finally {
+        hideLoading(); // Скрываем спиннер загрузки
     }
 });
+
+// Остальной код остается без изменений...
