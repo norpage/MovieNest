@@ -14,9 +14,9 @@
           "type": "image/png"
       }
   ],
-  "start_url": "/MovieNest/", // Укажите правильный путь к вашей странице
+  "start_url": "/",
   "background_color": "#000000",
   "display": "standalone",
-  "scope": "/MovieNest/", // Укажите правильный путь к вашей странице
+  "scope": "/",
   "theme_color": "#000000"
 }
