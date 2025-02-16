@@ -1,10 +1,10 @@
 const CACHE_NAME = 'cinema-app-v1';
 const ASSETS = [
-   '/MovieNest/',
-  '/MovieNest/index.html',
-  '/MovieNest/style.css',
-  '/MovieNest/app.js',
-  '/MovieNest/manifest.json',
+  '/',
+  '/index.html',
+  '/style.css',
+  '/app.js',
+  '/manifest.json',
   'https://thumb.cloud.mail.ru/weblink/thumb/xw1/pQpq/Xcj6Q4yAS',
   'https://thumb.cloud.mail.ru/weblink/thumb/xw1/guM2/V6XLC5B2H'
 ];
