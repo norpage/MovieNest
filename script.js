@@ -110,9 +110,12 @@ document.getElementById("searchForm").addEventListener("submit", async function 
     const resultDiv = document.getElementById("result");
     const iframe = document.getElementById("filmFrame");
     const downloadLink = document.getElementById("downloadLink");
+    const searchButton = document.getElementById("searchButton");
 
     downloadLink.style.display = "none";
     document.querySelector('.trailer').style.display = 'none'
+    searchButton.disabled = true;
+    searchButton.textContent = "Searching...";
 
     if (/^\d+$/.test(input) || input.includes("kinopoisk")) {
         const number = input.match(/\d+/)[0];
@@ -187,6 +190,8 @@ document.getElementById("searchForm").addEventListener("submit", async function 
         }
 
     }
+    searchButton.disabled = false;
+    searchButton.textContent = "Search";
 });
 
 function loadFilmFromLocalStorage() {
