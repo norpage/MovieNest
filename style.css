@@ -179,6 +179,7 @@ button:hover {
     text-align: center;
 }
 #closeFilm{
+    display:none;
     text-decoration: none;
     padding: 10px 15px;
     background: #660000;
