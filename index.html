@@ -18,6 +18,7 @@
     <div class="container">
         <div class="search-results">
             <h2 class="resultName"></h2>
+            <div id="loadingGif"></div>
             <div id="result"></div>
         </div>
 
@@ -25,7 +26,9 @@
             <form id="searchForm">
                 <input type="text" id="searchInput" placeholder="Enter film name or Kinopoisk URL/number" required>
                 <button id="searchButton" type="submit">Search</button>
+                <div id="closeFilm">Close Film</div>
             </form>
+            <img class="notFound" src="notfound.png" style="width: 60%;display: none" alt="notFound" >
             <iframe id="filmFrame" allowfullscreen></iframe>
             <div class="divDow">
                 <p class="name">Select And Enjoy Movies</p>

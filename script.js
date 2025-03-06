@@ -3,7 +3,7 @@ window.addEventListener('load', async function () {
     const bestMoviesUrl = "https://api.allorigins.win/raw?url=https://kinogo.ec/";
     const iframe = document.getElementById("filmFrame");
     const trailerP = document.querySelector('.trailer')
-    
+
     if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/MovieNest/service-worker.js')
         .then((registration) => {
@@ -69,6 +69,8 @@ window.addEventListener('load', async function () {
                                 if (iframeSrc) {
                                     document.querySelector('.name').textContent = item.title
                                     iframe.src = iframeSrc;
+                                    iframe.style.display = 'block'
+                                    document.querySelector('.divDow').style.display='block'
                                     trailerP.textContent = "Trailer"
                                     trailerP.style.display = 'block'
                                     localStorage.setItem("selectedURL", iframeSrc);
@@ -87,16 +89,9 @@ window.addEventListener('load', async function () {
                                     })
                                     fetchTitleAndHLS(iframeSrc)
                                     localStorage.removeItem("selectedNumber")
-                                } else {
-                                    console.error('data-src attribute not found in <li>');
                                 }
-                            } else {
-                                console.error('Element with data-provider="2" not found');
                             }
                         })
-                        .catch(error => {
-                            console.error('Error fetching details:', error);
-                        });
                 });
             });
         }
@@ -104,6 +99,14 @@ window.addEventListener('load', async function () {
         resultDiv.innerHTML = "An error occurred while fetching the best movies.";
     }
 });
+
+document.getElementById("closeFilm").addEventListener("click", async function (e) {
+    e.preventDefault();
+    localStorage.clear()
+    document.querySelector('.divDow').style.display='none'
+    document.getElementById("filmFrame").style.display='none'
+
+})
 document.getElementById("searchForm").addEventListener("submit", async function (e) {
     e.preventDefault();
     const input = document.getElementById("searchInput").value.trim();
@@ -111,18 +114,25 @@ document.getElementById("searchForm").addEventListener("submit", async function 
     const iframe = document.getElementById("filmFrame");
     const downloadLink = document.getElementById("downloadLink");
     const searchButton = document.getElementById("searchButton");
+    const loadingGif=document.getElementById("loadingGif")
+
 
     downloadLink.style.display = "none";
     document.querySelector('.trailer').style.display = 'none'
     searchButton.disabled = true;
     searchButton.textContent = "Searching...";
     searchButton.style.cursor = "wait";
+    loadingGif.style.display='block'
+    document.querySelector('.resultName').textContent = "Loading Please Wait..."
+
+
 
     if (/^\d+$/.test(input) || input.includes("kinopoisk")) {
         const number = input.match(/\d+/)[0];
         const url = `https://ddbb.lol?id=${number}&n=0`;
         iframe.src = url;
-
+        iframe.style.display = 'block'
+        document.querySelector('.divDow').style.display='block'
         localStorage.setItem("selectedNumber", number);
         localStorage.removeItem("selectedURL")
         localStorage.removeItem("selectedName")
@@ -134,7 +144,7 @@ document.getElementById("searchForm").addEventListener("submit", async function 
         const proxyUrl = 'https://api.allorigins.win/raw?url=';
 
         try {
-            resultDiv.innerHTML = "<p>Loading...</p>";
+            resultDiv.innerHTML = "";
 
             const res = await fetch(proxyUrl + searchUrl);
             if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
@@ -145,7 +155,13 @@ document.getElementById("searchForm").addEventListener("submit", async function 
 
             const searchResults = doc.querySelectorAll(".search_results .element");
             if (searchResults.length === 0) {
+                document.querySelector('.resultName').textContent = "Search Results"
                 resultDiv.innerHTML = "No results found.";
+                searchButton.disabled = false;
+                searchButton.textContent = "Search";
+                searchButton.style.cursor = "pointer";
+                loadingGif.style.display='none'
+
                 return;
             }
 
@@ -169,12 +185,14 @@ document.getElementById("searchForm").addEventListener("submit", async function 
                     <div class="movie-duration">${durationElement?.textContent || ""}</div>
                 </div>`;
                     document.querySelector('.resultName').textContent = "Search Results"
-
+                    loadingGif.style.display='none'
                     document.querySelector('.trailer').style.display = 'none'
 
                     card.addEventListener("click", function () {
                         const url = `https://ddbb.lol?id=${dataId}&n=0`;
                         iframe.src = url;
+                        iframe.style.display = 'block'
+                        document.querySelector('.divDow').style.display='block'
                         localStorage.setItem("selectedNumber", dataId);
                         localStorage.removeItem("selectedURL")
                         localStorage.removeItem("selectedName")
@@ -186,8 +204,11 @@ document.getElementById("searchForm").addEventListener("submit", async function 
                 }
             });
         } catch (error) {
-            console.error("Error:", error.message);
-            resultDiv.innerHTML = "An error occurred while fetching data.";
+            loadingGif.style.display='none'
+            document.querySelector('.resultName').textContent = "Ooops Please Reload Page!"
+            document.getElementById("filmFrame").style.display="none"
+            document.querySelector('.notFound').style.display = "block"
+
         }
 
     }
@@ -205,12 +226,16 @@ function loadFilmFromLocalStorage() {
         const iframe = document.getElementById("filmFrame");
         const url = `https://ddbb.lol?id=${savedNumber}&n=0`;
         iframe.src = url;
+        iframe.style.display = 'block'
+        document.querySelector('.divDow').style.display='block'
         fetchTitleAndHLS(+savedNumber);
     }
     if (savedUrl) {
         const iframe = document.getElementById("filmFrame");
         document.querySelector('.name').textContent = savedName
         iframe.src = savedUrl;
+        iframe.style.display = 'block'
+        document.querySelector('.divDow').style.display='block'
         fetchTitleAndHLS(savedUrl)
 
     }
@@ -253,8 +278,6 @@ async function fetchTitleAndHLS(extractedNumber) {
                 document.querySelector('.name').textContent = titleMatch[1];
                 document.title = titleMatch[1];
                 encodedName = encodeURIComponent(titleMatch[1]);
-            } else {
-                console.log("Title not found.");
             }
 
             const hlsRegex = /https?:\/\/[^\s"]+\.m3u8[^\s"]*/;
@@ -262,8 +285,6 @@ async function fetchTitleAndHLS(extractedNumber) {
             let encodedHls = '';
             if (hlsLink) {
                 encodedHls = encodeURIComponent(hlsLink[0]);
-            } else {
-                console.log("HLS link not found.");
             }
 
             if (encodedName && encodedHls) {
@@ -272,10 +293,7 @@ async function fetchTitleAndHLS(extractedNumber) {
                 downloadLink.href = downloadUrl;
                 downloadLink.style.display = 'block';
             }
-        } else {
-            console.log("Iframe URL not found.");
         }
     } catch (error) {
-        console.error("Error:", error.message);
     }
 }
