@@ -136,7 +136,7 @@ form {
 input {
     flex-grow: 1;
     padding: 10px;
-    font-size: 16px;
+    font-size: 23px;
     border: none;
     border-bottom: 1px solid #ccc;
     outline: none;
@@ -255,7 +255,7 @@ button:hover {
 
     input,
     button {
-        font-size: 14px;
+        font-size: 18px;
     }
 
     button {
