@@ -39,7 +39,6 @@ body {
     backdrop-filter: blur(10px);
     border: solid rgb(56, 10, 10);
     padding: 15px;
-    border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow-x: hidden;
 }
@@ -157,6 +156,8 @@ button {
     font-family: "Teko", serif;
     cursor: pointer;
     font-size: 18px;
+    border-radius: 5px;
+
 }
 
 button:hover {
@@ -184,11 +185,12 @@ button:hover {
     padding: 10px 15px;
     background: #660000;
     color: white;
-    border-radius: 5px;
     font-family: "Teko", serif;
     cursor: pointer;
     font-size: 18px;
     text-align: center;
+    border-radius: 5px;
+
 }
 
 .divDow {
