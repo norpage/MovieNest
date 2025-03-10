@@ -34,7 +34,7 @@
             opacity: 1;
         }
         .modal-content {
-            height: 400px;
+            height: 500px; /* Increased height to accommodate rating */
             background: #292929;
             padding: 20px;
             border-radius: 8px;
@@ -54,7 +54,6 @@
         #contactForm {
             display: flex;
             flex-direction: column;
-            gap: 25px;
         }
         #contactForm input {
             flex-grow: unset;
@@ -77,15 +76,52 @@
         .hidden {
             display: none;
         }
-        #openModalButton{
+        #openModalButton {
             background: rgba(64, 0, 0, 0.24);
             position: absolute;
             right: 5px;
             bottom: 5px;
         }
-        #openModalButton:hover{
+        #openModalButton:hover {
             background: rgb(64, 0, 0);
+        }
 
+        /* Star Rating Styles */
+        .rating-section {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .stars {
+            display: flex;
+            justify-content: center;
+            flex-direction: row-reverse;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        .star {
+            color: #ccc;
+            transition: all 0.3s ease;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .star.hover,
+        .star.hover ~ .star {
+            color: #ffd700;
+            text-shadow: 0 2px 10px rgba(255, 215, 0, 0.6);
+            transform: scale(1.1);
+        }
+        .star.selected,
+        .star.selected ~ .star {
+            color: #ffd700;
+            text-shadow: 0 2px 10px rgba(255, 215, 0, 0.6);
+        }
+        .rating-text {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            color: #757575;
+        }
+        .rating-text span {
+            font-weight: bold;
+            color: #ffd700;
         }
     </style>
 </head>
@@ -125,6 +161,20 @@
             <input type="text" id="name" placeholder="Your Name" required>
             <input type="email" id="email" placeholder="Your Email" required>
             <input type="text" id="message" placeholder="Your Message" required>
+
+            <!-- Star Rating Section -->
+            <div class="rating-section">
+                <p>Rate your experience:</p>
+                <div class="stars" id="rating">
+                    <span class="star" data-value="5">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="1">★</span>
+                </div>
+                <p class="rating-text">Your rating: <span id="selected-rating">0</span></p>
+            </div>
+
             <button type="submit" id="submitButton">
                 <span id="buttonText">Send</span>
                 <div id="spinner" class="spinner hidden"></div>
@@ -153,6 +203,49 @@
         }
     });
 
+    // Star Rating Logic
+    const stars = document.querySelectorAll('.star');
+    const ratingDisplay = document.getElementById('selected-rating');
+    let selectedRating = 0;
+
+    stars.forEach(star => {
+        star.addEventListener('mouseover', () => {
+            resetStars();
+            star.classList.add('hover');
+            let next = star.nextElementSibling;
+            while (next) {
+                next.classList.add('hover');
+                next = next.nextElementSibling;
+            }
+        });
+
+        star.addEventListener('mouseout', () => {
+            resetStars();
+            applySelection();
+        });
+
+        star.addEventListener('click', () => {
+            selectedRating = star.getAttribute('data-value');
+            ratingDisplay.textContent = selectedRating;
+            applySelection();
+        });
+    });
+
+    function resetStars() {
+        stars.forEach(s => s.classList.remove('hover'));
+    }
+
+    function applySelection() {
+        stars.forEach(s => {
+            if (s.getAttribute('data-value') <= selectedRating) {
+                s.classList.add('selected');
+            } else {
+                s.classList.remove('selected');
+            }
+        });
+    }
+
+    // Form Submission
     document.getElementById("contactForm").addEventListener("submit", function(event) {
         event.preventDefault();
 
@@ -171,7 +264,8 @@
         emailjs.send("geuphmh", "l6p2mq8222", {
             name: document.getElementById("name").value,
             email: document.getElementById("email").value,
-            message: document.getElementById("message").value
+            message: document.getElementById("message").value,
+            rating: selectedRating // Include the rating in the email
         }).then(() => {
             Swal.fire({
                 icon: 'success',
@@ -232,6 +326,9 @@
         document.getElementById("name").value = "";
         document.getElementById("email").value = "";
         document.getElementById("message").value = "";
+        selectedRating = 0;
+        ratingDisplay.textContent = selectedRating;
+        resetStars();
     }
 </script>
 </body>
