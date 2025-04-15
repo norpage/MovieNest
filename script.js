@@ -1,17 +1,8 @@
 window.addEventListener('load', async function () {
     const resultDiv = document.getElementById("result");
     const bestMoviesUrl = "https://api.allorigins.win/raw?url=https://kinogo.ec/";
-    // const bestMoviesUrl = "https://kinogo.ec/";
     const iframe = document.getElementById("filmFrame");
     const trailerP = document.querySelector('.trailer')
-
-    if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
-        .then(() => {
-        })
-        .catch(() => {
-        });
-}
 
     try {
         const res = await fetch(bestMoviesUrl);
@@ -52,10 +43,10 @@ window.addEventListener('load', async function () {
 
 
                 card.addEventListener('click', () => {
-                    
-                     // Top Movies
+
+                    // Top Movies
                     fetch(`https://api.allorigins.win/raw?url=${item.url}`)
-                    
+
                     // fetch(item.url)
                         .then(response => response.text())
                         .then(pageHtml => {
@@ -72,8 +63,8 @@ window.addEventListener('load', async function () {
                                     document.querySelector('.name').textContent = item.title
                                     iframe.src = iframeSrc;
                                     iframe.style.display = 'block'
-                                    document.getElementById("closeFilm").style.display='block'
-                                    document.querySelector('.divDow').style.display='block'
+                                    document.getElementById("closeFilm").style.display = 'block'
+                                    document.querySelector('.divDow').style.display = 'block'
                                     trailerP.textContent = "Trailer"
                                     trailerP.style.display = 'block'
                                     localStorage.setItem("selectedURL", iframeSrc);
@@ -106,9 +97,9 @@ window.addEventListener('load', async function () {
 document.getElementById("closeFilm").addEventListener("click", async function (e) {
     e.preventDefault();
     localStorage.clear()
-    document.querySelector('.divDow').style.display='none'
-    document.getElementById("filmFrame").style.display='none'
-    document.getElementById("closeFilm").style.display='none'
+    document.querySelector('.divDow').style.display = 'none'
+    document.getElementById("filmFrame").style.display = 'none'
+    document.getElementById("closeFilm").style.display = 'none'
 
 })
 document.getElementById("searchForm").addEventListener("submit", async function (e) {
@@ -118,7 +109,7 @@ document.getElementById("searchForm").addEventListener("submit", async function 
     const iframe = document.getElementById("filmFrame");
     const downloadLink = document.getElementById("downloadLink");
     const searchButton = document.getElementById("searchButton");
-    const loadingGif=document.getElementById("loadingGif")
+    const loadingGif = document.getElementById("loadingGif")
 
 
     downloadLink.style.display = "none";
@@ -126,7 +117,7 @@ document.getElementById("searchForm").addEventListener("submit", async function 
     searchButton.disabled = true;
     searchButton.textContent = "Searching...";
     searchButton.style.cursor = "wait";
-    loadingGif.style.display='block'
+    loadingGif.style.display = 'block'
     document.querySelector('.resultName').textContent = "Loading Please Wait..."
 
 
@@ -135,8 +126,8 @@ document.getElementById("searchForm").addEventListener("submit", async function 
         const number = input.match(/\d+/)[0];
         iframe.src = `https://ddbb.lol?id=${number}&n=0`;
         iframe.style.display = 'block'
-        document.getElementById("closeFilm").style.display='block'
-        document.querySelector('.divDow').style.display='block'
+        document.getElementById("closeFilm").style.display = 'block'
+        document.querySelector('.divDow').style.display = 'block'
         localStorage.setItem("selectedNumber", number);
         localStorage.removeItem("selectedURL")
         localStorage.removeItem("selectedName")
@@ -164,7 +155,7 @@ document.getElementById("searchForm").addEventListener("submit", async function 
                 searchButton.disabled = false;
                 searchButton.textContent = "Search";
                 searchButton.style.cursor = "pointer";
-                loadingGif.style.display='none'
+                loadingGif.style.display = 'none'
 
                 return;
             }
@@ -189,14 +180,14 @@ document.getElementById("searchForm").addEventListener("submit", async function 
                     <div class="movie-duration">${durationElement?.textContent || ""}</div>
                 </div>`;
                     document.querySelector('.resultName').textContent = "Search Results"
-                    loadingGif.style.display='none'
+                    loadingGif.style.display = 'none'
                     document.querySelector('.trailer').style.display = 'none'
 
                     card.addEventListener("click", function () {
                         iframe.src = `https://ddbb.lol?id=${dataId}&n=0`;
                         iframe.style.display = 'block'
-                        document.getElementById("closeFilm").style.display='block'
-                        document.querySelector('.divDow').style.display='block'
+                        document.getElementById("closeFilm").style.display = 'block'
+                        document.querySelector('.divDow').style.display = 'block'
                         localStorage.setItem("selectedNumber", dataId);
                         localStorage.removeItem("selectedURL")
                         localStorage.removeItem("selectedName")
@@ -208,9 +199,9 @@ document.getElementById("searchForm").addEventListener("submit", async function 
                 }
             });
         } catch (error) {
-            loadingGif.style.display='none'
+            loadingGif.style.display = 'none'
             document.querySelector('.resultName').textContent = "Ooops Please Reload Page!"
-            document.getElementById("filmFrame").style.display="none"
+            document.getElementById("filmFrame").style.display = "none"
             document.querySelector('.notFound').style.display = "block"
 
         }
@@ -230,8 +221,8 @@ function loadFilmFromLocalStorage() {
         const iframe = document.getElementById("filmFrame");
         iframe.src = `https://ddbb.lol?id=${savedNumber}&n=0`;
         iframe.style.display = 'block'
-        document.getElementById("closeFilm").style.display='block'
-        document.querySelector('.divDow').style.display='block'
+        document.getElementById("closeFilm").style.display = 'block'
+        document.querySelector('.divDow').style.display = 'block'
         fetchTitleAndHLS(+savedNumber);
     }
     if (savedUrl) {
@@ -239,8 +230,8 @@ function loadFilmFromLocalStorage() {
         document.querySelector('.name').textContent = savedName
         iframe.src = savedUrl;
         iframe.style.display = 'block'
-        document.getElementById("closeFilm").style.display='block'
-        document.querySelector('.divDow').style.display='block'
+        document.getElementById("closeFilm").style.display = 'block'
+        document.querySelector('.divDow').style.display = 'block'
         fetchTitleAndHLS(savedUrl)
 
     }
@@ -267,10 +258,10 @@ async function fetchTitleAndHLS(extractedNumber) {
         }
 
         if (iframeUrl) {
-            const response = await fetch(iframeUrl,{
-                     mode: 'cors',
-                     credentials: 'include'
-                    });
+            const response = await fetch(iframeUrl, {
+                mode: 'cors',
+                credentials: 'include'
+            });
             if (!response.ok) {
                 throw new Error(`Request failed: ${response.status}`);
             }
