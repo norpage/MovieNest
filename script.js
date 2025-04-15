@@ -5,7 +5,7 @@ window.addEventListener('load', async function () {
     const trailerP = document.querySelector('.trailer')
 
     if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/MovieNest/service-worker.js')
+    navigator.serviceWorker.register('/service-worker.js')
         .then(() => {
         })
         .catch(() => {
@@ -51,8 +51,11 @@ window.addEventListener('load', async function () {
 
 
                 card.addEventListener('click', () => {
-
-                    fetch(`https://api.allorigins.win/raw?url=${item.url}`)
+                    
+                     // Top Movies
+                    // fetch(`https://api.allorigins.win/raw?url=${item.url}`)
+                    
+                    fetch(item.url)
                         .then(response => response.text())
                         .then(pageHtml => {
                             const pageDoc = new DOMParser().parseFromString(pageHtml, 'text/html');
