@@ -1,6 +1,7 @@
 window.addEventListener('load', async function () {
     const resultDiv = document.getElementById("result");
-    const bestMoviesUrl = "https://api.allorigins.win/raw?url=https://kinogo.ec/";
+    // const bestMoviesUrl = "https://api.allorigins.win/raw?url=https://kinogo.ec/";
+    const bestMoviesUrl = "https://kinogo.ec/";
     const iframe = document.getElementById("filmFrame");
     const trailerP = document.querySelector('.trailer')
 
