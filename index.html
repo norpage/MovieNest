@@ -4,8 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MovieNest – A seamless movie-watching experience with powerful search, pagination, and a built-in player. Find and stream your favorite films effortlessly!">
+    <meta name="description"
+        content="MovieNest – A seamless movie-watching experience with powerful search, pagination, and a built-in player. Find and stream your favorite films effortlessly!">
+    <meta name="keywords"
+        content="movies, films, streaming, MovieNest, movie search, watch online, kinoner,kino, ditel online, anvchar filmer, anvchar,">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="MovieNest Team">
     <title>MovieNest</title>
+
+    <!-- Open Graph for Social Media Sharing -->
+    <meta property="og:title" content="MovieNest - Watch Movies Online">
+    <meta property="og:description"
+        content="Enjoy a seamless movie-watching experience with advanced search and streaming. Watch your favorite films online easily.">
+    <meta property="og:image" content="https://thumb.cloud.mail.ru/weblink/thumb/xw1/guM2/V6XLC5B2H">
+    <meta property="og:url" content="https://www.movienest.com">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MovieNest - Watch Movies Online">
+    <meta name="twitter:description"
+        content="Stream movies effortlessly on MovieNest. Search, find, and enjoy your favorites!">
+    <meta name="twitter:image" content="https://thumb.cloud.mail.ru/weblink/thumb/xw1/guM2/V6XLC5B2H">
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap" rel="stylesheet">
     <link rel="icon" href="https://thumb.cloud.mail.ru/weblink/thumb/xw1/hPZo/pz7QbpsHP" type="image/x-icon">
@@ -29,12 +49,15 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
+
         .modal.active {
             display: flex;
             opacity: 1;
         }
+
         .modal-content {
-            height: 500px; /* Increased height to accommodate rating */
+            height: 500px;
+            /* Increased height to accommodate rating */
             background: #292929;
             padding: 20px;
             border-radius: 8px;
@@ -42,6 +65,7 @@
             max-width: 400px;
             position: relative;
         }
+
         .modal-content button.close {
             position: absolute;
             top: 10px;
@@ -51,13 +75,16 @@
             font-size: 20px;
             cursor: pointer;
         }
+
         #contactForm {
             display: flex;
             flex-direction: column;
         }
+
         #contactForm input {
             flex-grow: unset;
         }
+
         .spinner {
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
@@ -68,20 +95,24 @@
             display: inline-block;
             margin-right: 8px;
         }
+
         @keyframes spin {
             to {
                 transform: rotate(360deg);
             }
         }
+
         .hidden {
             display: none;
         }
+
         #openModalButton {
             background: rgba(64, 0, 0, 0.24);
             position: absolute;
             right: 5px;
             bottom: 5px;
         }
+
         #openModalButton:hover {
             background: rgb(64, 0, 0);
         }
@@ -91,6 +122,7 @@
             margin: 20px 0;
             text-align: center;
         }
+
         .stars {
             display: flex;
             justify-content: center;
@@ -98,27 +130,32 @@
             font-size: 2rem;
             cursor: pointer;
         }
+
         .star {
             color: #ccc;
             transition: all 0.3s ease;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+
         .star.hover,
-        .star.hover ~ .star {
+        .star.hover~.star {
             color: #ffd700;
             text-shadow: 0 2px 10px rgba(255, 215, 0, 0.6);
             transform: scale(1.1);
         }
+
         .star.selected,
-        .star.selected ~ .star {
+        .star.selected~.star {
             color: #ffd700;
             text-shadow: 0 2px 10px rgba(255, 215, 0, 0.6);
         }
+
         .rating-text {
             margin-top: 10px;
             font-size: 1.2rem;
             color: #757575;
         }
+
         .rating-text span {
             font-weight: bold;
             color: #ffd700;
@@ -127,210 +164,211 @@
 </head>
 
 <body>
-<div class="container">
-    <div class="search-results">
-        <h2 class="resultName"></h2>
-        <div id="loadingGif"></div>
-        <div id="result"></div>
+    <div class="container">
+        <div class="search-results">
+            <h2 class="resultName"></h2>
+            <div id="loadingGif"></div>
+            <div id="result"></div>
+        </div>
+
+        <div class="main-content">
+            <form id="searchForm">
+                <input type="text" id="searchInput" placeholder="Enter film name or Kinopoisk URL/number" required>
+                <button id="searchButton" type="submit">Search</button>
+                <div id="closeFilm">Close</div>
+            </form>
+            <img class="notFound" src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/ACUt/85DjFW2sB"
+                style="width: 60%; display: none" alt="notFound">
+            <iframe id="filmFrame" allowfullscreen></iframe>
+            <div class="divDow">
+                <p class="name">Select And Enjoy Movies</p>
+                <button class="trailer"></button>
+                <a href="" id="downloadLink" class="download-link">Download</a>
+            </div>
+        </div>
+        <!-- Кнопка для открытия модального окна -->
+        <button id="openModalButton">Contact Us</button>
     </div>
 
-    <div class="main-content">
-        <form id="searchForm">
-            <input type="text" id="searchInput" placeholder="Enter film name or Kinopoisk URL/number" required>
-            <button id="searchButton" type="submit">Search</button>
-            <div id="closeFilm">Close</div>
-        </form>
-        <img class="notFound" src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/ACUt/85DjFW2sB" style="width: 60%; display: none" alt="notFound">
-        <iframe id="filmFrame" allowfullscreen></iframe>
-        <div class="divDow">
-            <p class="name">Select And Enjoy Movies</p>
-            <button class="trailer"></button>
-            <a href="" id="downloadLink" class="download-link">Download</a>
+    <!-- Модальное окно -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <button class="close" onclick="closeModal()">&times;</button>
+            <h2>Contact Us</h2>
+            <form id="contactForm">
+                <input type="text" id="name" placeholder="Your Name" required>
+                <input type="email" id="email" placeholder="Your Email" required>
+                <input type="text" id="message" placeholder="Your Message" required>
+
+                <!-- Star Rating Section -->
+                <div class="rating-section">
+                    <p>Rate your experience:</p>
+                    <div class="stars" id="rating">
+                        <span class="star" data-value="5">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="1">★</span>
+                    </div>
+                    <p class="rating-text">Your rating: <span id="selected-rating">0</span></p>
+                </div>
+
+                <button type="submit" id="submitButton">
+                    <span id="buttonText">Send</span>
+                    <div id="spinner" class="spinner hidden"></div>
+                </button>
+            </form>
         </div>
     </div>
-    <!-- Кнопка для открытия модального окна -->
-    <button id="openModalButton">Contact Us</button>
-</div>
 
-<!-- Модальное окно -->
-<div id="contactModal" class="modal">
-    <div class="modal-content">
-        <button class="close" onclick="closeModal()">&times;</button>
-        <h2>Contact Us</h2>
-        <form id="contactForm">
-            <input type="text" id="name" placeholder="Your Name" required>
-            <input type="email" id="email" placeholder="Your Email" required>
-            <input type="text" id="message" placeholder="Your Message" required>
+    <script src="script.js"></script>
+    <script>
+        emailjs.init("Xh3WhTefsno6bxN5J");
 
-            <!-- Star Rating Section -->
-            <div class="rating-section">
-                <p>Rate your experience:</p>
-                <div class="stars" id="rating">
-                    <span class="star" data-value="5">★</span>
-                    <span class="star" data-value="4">★</span>
-                    <span class="star" data-value="3">★</span>
-                    <span class="star" data-value="2">★</span>
-                    <span class="star" data-value="1">★</span>
-                </div>
-                <p class="rating-text">Your rating: <span id="selected-rating">0</span></p>
-            </div>
-
-            <button type="submit" id="submitButton">
-                <span id="buttonText">Send</span>
-                <div id="spinner" class="spinner hidden"></div>
-            </button>
-        </form>
-    </div>
-</div>
-
-<script src="script.js"></script>
-<script>
-    emailjs.init("Xh3WhTefsno6bxN5J");
-
-    function openModal() {
-        document.getElementById("contactModal").classList.add("active");
-    }
-
-    function closeModal() {
-        document.getElementById("contactModal").classList.remove("active");
-    }
-
-    document.getElementById("openModalButton").addEventListener("click", openModal);
-
-    window.addEventListener("click", (event) => {
-        if (event.target === document.getElementById("contactModal")) {
-            closeModal();
+        function openModal() {
+            document.getElementById("contactModal").classList.add("active");
         }
-    });
 
-    // Star Rating Logic
-    const stars = document.querySelectorAll('.star');
-    const ratingDisplay = document.getElementById('selected-rating');
-    let selectedRating = 0;
+        function closeModal() {
+            document.getElementById("contactModal").classList.remove("active");
+        }
 
-    stars.forEach(star => {
-        star.addEventListener('mouseover', () => {
-            resetStars();
-            star.classList.add('hover');
-            let next = star.nextElementSibling;
-            while (next) {
-                next.classList.add('hover');
-                next = next.nextElementSibling;
+        document.getElementById("openModalButton").addEventListener("click", openModal);
+
+        window.addEventListener("click", (event) => {
+            if (event.target === document.getElementById("contactModal")) {
+                closeModal();
             }
         });
 
-        star.addEventListener('mouseout', () => {
-            resetStars();
-            applySelection();
+        // Star Rating Logic
+        const stars = document.querySelectorAll('.star');
+        const ratingDisplay = document.getElementById('selected-rating');
+        let selectedRating = 0;
+
+        stars.forEach(star => {
+            star.addEventListener('mouseover', () => {
+                resetStars();
+                star.classList.add('hover');
+                let next = star.nextElementSibling;
+                while (next) {
+                    next.classList.add('hover');
+                    next = next.nextElementSibling;
+                }
+            });
+
+            star.addEventListener('mouseout', () => {
+                resetStars();
+                applySelection();
+            });
+
+            star.addEventListener('click', () => {
+                selectedRating = star.getAttribute('data-value');
+                ratingDisplay.textContent = selectedRating;
+                applySelection();
+            });
         });
 
-        star.addEventListener('click', () => {
-            selectedRating = star.getAttribute('data-value');
+        function resetStars() {
+            stars.forEach(s => s.classList.remove('hover'));
+        }
+
+        function applySelection() {
+            stars.forEach(s => {
+                if (s.getAttribute('data-value') <= selectedRating) {
+                    s.classList.add('selected');
+                } else {
+                    s.classList.remove('selected');
+                }
+            });
+        }
+
+        // Form Submission
+        document.getElementById("contactForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            if (!validateForm()) {
+                return;
+            }
+
+            const submitButton = document.getElementById("submitButton");
+            const buttonText = document.getElementById("buttonText");
+            const spinner = document.getElementById("spinner");
+
+            submitButton.disabled = true;
+            buttonText.textContent = "Sending...";
+            spinner.classList.remove("hidden");
+
+            emailjs.send("geuphmh", "l6p2mq8222", {
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                message: document.getElementById("message").value,
+                rating: selectedRating // Include the rating in the email
+            }).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Message sent successfully!',
+                    confirmButtonText: 'OK'
+                });
+                closeModal();
+                clearForm();
+            }, (error) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Failed to send message: ' + error,
+                    confirmButtonText: 'OK'
+                });
+            }).finally(() => {
+                submitButton.disabled = false;
+                buttonText.textContent = "Send";
+                spinner.classList.add("hidden");
+            });
+        });
+
+        function validateForm() {
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const message = document.getElementById("message").value;
+
+            if (name.trim() === "" || email.trim() === "" || message.trim() === "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Please fill in all fields.',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
+            if (!validateEmail(email)) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Please enter a valid email address.',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        function clearForm() {
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("message").value = "";
+            selectedRating = 0;
             ratingDisplay.textContent = selectedRating;
-            applySelection();
-        });
-    });
-
-    function resetStars() {
-        stars.forEach(s => s.classList.remove('hover'));
-    }
-
-    function applySelection() {
-        stars.forEach(s => {
-            if (s.getAttribute('data-value') <= selectedRating) {
-                s.classList.add('selected');
-            } else {
-                s.classList.remove('selected');
-            }
-        });
-    }
-
-    // Form Submission
-    document.getElementById("contactForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-
-        if (!validateForm()) {
-            return;
+            resetStars();
         }
-
-        const submitButton = document.getElementById("submitButton");
-        const buttonText = document.getElementById("buttonText");
-        const spinner = document.getElementById("spinner");
-
-        submitButton.disabled = true;
-        buttonText.textContent = "Sending...";
-        spinner.classList.remove("hidden");
-
-        emailjs.send("geuphmh", "l6p2mq8222", {
-            name: document.getElementById("name").value,
-            email: document.getElementById("email").value,
-            message: document.getElementById("message").value,
-            rating: selectedRating // Include the rating in the email
-        }).then(() => {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: 'Message sent successfully!',
-                confirmButtonText: 'OK'
-            });
-            closeModal();
-            clearForm();
-        }, (error) => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Failed to send message: ' + error,
-                confirmButtonText: 'OK'
-            });
-        }).finally(() => {
-            submitButton.disabled = false;
-            buttonText.textContent = "Send";
-            spinner.classList.add("hidden");
-        });
-    });
-
-    function validateForm() {
-        const name = document.getElementById("name").value;
-        const email = document.getElementById("email").value;
-        const message = document.getElementById("message").value;
-
-        if (name.trim() === "" || email.trim() === "" || message.trim() === "") {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Oops...',
-                text: 'Please fill in all fields.',
-                confirmButtonText: 'OK'
-            });
-            return false;
-        }
-
-        if (!validateEmail(email)) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Oops...',
-                text: 'Please enter a valid email address.',
-                confirmButtonText: 'OK'
-            });
-            return false;
-        }
-
-        return true;
-    }
-
-    function validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(String(email).toLowerCase());
-    }
-
-    function clearForm() {
-        document.getElementById("name").value = "";
-        document.getElementById("email").value = "";
-        document.getElementById("message").value = "";
-        selectedRating = 0;
-        ratingDisplay.textContent = selectedRating;
-        resetStars();
-    }
-</script>
+    </script>
 </body>
 
 </html>
