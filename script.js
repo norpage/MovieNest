@@ -1,7 +1,7 @@
 window.addEventListener('load', async function () {
     const resultDiv = document.getElementById("result");
-    // const bestMoviesUrl = "https://api.allorigins.win/raw?url=https://kinogo.ec/";
-    const bestMoviesUrl = "https://kinogo.ec/";
+    const bestMoviesUrl = "https://api.allorigins.win/raw?url=https://kinogo.ec/";
+    // const bestMoviesUrl = "https://kinogo.ec/";
     const iframe = document.getElementById("filmFrame");
     const trailerP = document.querySelector('.trailer')
 
@@ -54,9 +54,9 @@ window.addEventListener('load', async function () {
                 card.addEventListener('click', () => {
                     
                      // Top Movies
-                    // fetch(`https://api.allorigins.win/raw?url=${item.url}`)
+                    fetch(`https://api.allorigins.win/raw?url=${item.url}`)
                     
-                    fetch(item.url)
+                    // fetch(item.url)
                         .then(response => response.text())
                         .then(pageHtml => {
                             const pageDoc = new DOMParser().parseFromString(pageHtml, 'text/html');
