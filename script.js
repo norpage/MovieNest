@@ -1,11 +1,13 @@
+const corsUrl='https://api.allorigins.win/raw?url='
+const kinogoUrl = 'https://kinogo.ec/';
+
 window.addEventListener('load', async function () {
     const resultDiv = document.getElementById("result");
-    const bestMoviesUrl = "https://api.allorigins.win/raw?url=https://kinogo.ec/";
     const iframe = document.getElementById("filmFrame");
     const trailerP = document.querySelector('.trailer')
 
     try {
-        const res = await fetch(bestMoviesUrl);
+        const res = await fetch(corsUrl+kinogoUrl);
         const html = await res.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
@@ -33,7 +35,7 @@ window.addEventListener('load', async function () {
                 const card = document.createElement("div");
                 card.classList.add('movie-card');
                 card.innerHTML = `
-                            <img src="https://kinogo.ec/${item.img}" alt="${item.title}">
+                            <img src="${kinogoUrl+item.img}" alt="${item.title}">
                             <div class="movie-info">
                                 <div class="movie-title">${item.title}</div>
                                 <div class="movie-year">${item.year}</div>
@@ -45,7 +47,7 @@ window.addEventListener('load', async function () {
                 card.addEventListener('click', () => {
 
                     // Top Movies
-                    fetch(`https://api.allorigins.win/raw?url=${item.url}`)
+                    fetch(corsUrl+item.url)
 
                     // fetch(item.url)
                         .then(response => response.text())
@@ -136,12 +138,11 @@ document.getElementById("searchForm").addEventListener("submit", async function 
         fetchTitleAndHLS(+number);
     } else {
         const searchUrl = `https://www.kinopoisk.ru/index.php?kp_query=${encodeURIComponent(input)}`;
-        const proxyUrl = 'https://api.allorigins.win/raw?url=';
 
         try {
             resultDiv.innerHTML = "";
 
-            const res = await fetch(proxyUrl + searchUrl);
+            const res = await fetch(corsUrl + searchUrl);
             if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
 
             const html = await res.text();
@@ -292,4 +293,152 @@ async function fetchTitleAndHLS(extractedNumber) {
         }
     } catch (error) {
     }
+}
+
+
+
+emailjs.init("Xh3WhTefsno6bxN5J");
+
+function openModal() {
+    document.getElementById("contactModal").classList.add("active");
+}
+
+function closeModal() {
+    document.getElementById("contactModal").classList.remove("active");
+}
+
+document.getElementById("openModalButton").addEventListener("click", openModal);
+
+window.addEventListener("click", (event) => {
+    if (event.target === document.getElementById("contactModal")) {
+        closeModal();
+    }
+});
+
+// Star Rating Logic
+const stars = document.querySelectorAll('.star');
+const ratingDisplay = document.getElementById('selected-rating');
+let selectedRating = 0;
+
+stars.forEach(star => {
+    star.addEventListener('mouseover', () => {
+        resetStars();
+        star.classList.add('hover');
+        let next = star.nextElementSibling;
+        while (next) {
+            next.classList.add('hover');
+            next = next.nextElementSibling;
+        }
+    });
+
+    star.addEventListener('mouseout', () => {
+        resetStars();
+        applySelection();
+    });
+
+    star.addEventListener('click', () => {
+        selectedRating = star.getAttribute('data-value');
+        ratingDisplay.textContent = selectedRating;
+        applySelection();
+    });
+});
+
+function resetStars() {
+    stars.forEach(s => s.classList.remove('hover'));
+}
+
+function applySelection() {
+    stars.forEach(s => {
+        if (s.getAttribute('data-value') <= selectedRating) {
+            s.classList.add('selected');
+        } else {
+            s.classList.remove('selected');
+        }
+    });
+}
+
+// Form Submission
+document.getElementById("contactForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    if (!validateForm()) {
+        return;
+    }
+
+    const submitButton = document.getElementById("submitButton");
+    const buttonText = document.getElementById("buttonText");
+    const spinner = document.getElementById("spinner");
+
+    submitButton.disabled = true;
+    buttonText.textContent = "Sending...";
+    spinner.classList.remove("hidden");
+
+    emailjs.send("geuphmh", "l6p2mq8222", {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        message: document.getElementById("message").value,
+        rating: selectedRating // Include the rating in the email
+    }).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Message sent successfully!',
+            confirmButtonText: 'OK'
+        });
+        closeModal();
+        clearForm();
+    }, (error) => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Failed to send message: ' + error,
+            confirmButtonText: 'OK'
+        });
+    }).finally(() => {
+        submitButton.disabled = false;
+        buttonText.textContent = "Send";
+        spinner.classList.add("hidden");
+    });
+});
+
+function validateForm() {
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+
+    if (name.trim() === "" || email.trim() === "" || message.trim() === "") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Please fill in all fields.',
+            confirmButtonText: 'OK'
+        });
+        return false;
+    }
+
+    if (!validateEmail(email)) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Please enter a valid email address.',
+            confirmButtonText: 'OK'
+        });
+        return false;
+    }
+
+    return true;
+}
+
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+}
+
+function clearForm() {
+    document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("message").value = "";
+    selectedRating = 0;
+    ratingDisplay.textContent = selectedRating;
+    resetStars();
 }
